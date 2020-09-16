@@ -17,20 +17,21 @@ app.use(
     extended: true,
   })
 );
-app.post("/upload", function (req, res) {
-  const file = req.files.photo;
-  file.mv("./uploads/" + file.name, function (err, result) {
-    if (err) throw err;
-    res.send({
-      success: true,
-      message: "file upload",
-    });
-  });
-});
-app.post("/download", function (req, res) {
-  var file = __dirname + "/uploads/1.jpg";
-  res.download(file);
-});
+// app.post("/upload", function (req, res) {
+//   const file = req.files.photo;
+//   file.mv("./public/uploads/" + file.name, function (err, result) {
+//     if (err) throw err;
+//     res.send({
+//       success: true,
+//       message: "file upload",
+//     });
+//   });
+// });
+
+// app.post("/download", function (req, res) {
+//   var file = __dirname + "/public/uploads/web.png";
+//   res.download(file);
+// });
 Controllers(app);
 
 app.listen(8000);

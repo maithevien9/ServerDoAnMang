@@ -10,7 +10,7 @@ module.exports = function (db, User, PassWord, callback) {
 
     callback(dataString, data, token);
   } else {
-    var sql = `SELECT ID, User, PassWord, IDRoom FROM user where User = '${User}' and PassWord = md5('${PassWord}')`;
+    var sql = `SELECT ID, User, PassWord FROM user where User = '${User}' and PassWord = md5('${PassWord}')`;
     db.query(sql, function (err, results, fields) {
       if (err) {
         throw err;
