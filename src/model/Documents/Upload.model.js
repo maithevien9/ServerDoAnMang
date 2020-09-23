@@ -1,4 +1,5 @@
-module.exports = function (db, file, res, callback) {
+var jwtDecode = require("jwt-decode");
+module.exports = function (db, file, res, Token, IDFolder, callback) {
   console.log("this is  upload File");
   let ts = Date.now();
 
@@ -14,25 +15,37 @@ module.exports = function (db, file, res, callback) {
   console.log(
     year + "-" + month + "-" + date + " " + hour + ":" + min + ":" + sec
   );
-
-  if (file == null) {
+  var dataString = "";
+  if (file == null && Token == null && IDFolder == null) {
     data = "KHONG_THANH_CONG";
-
     callback(data);
   } else {
-    file.mv("./public/uploads/" + file.name, function (err, result) {
-      if (err) throw err;
-    });
-    var sql = `insert into documents VALUES (null, 1, '${file.name}', '${
-      year + "-" + month + "-" + date + " " + hour + ":" + min + ":" + sec
-    }', 5)`;
-    db.query(sql, function (err, results, fields) {
-      if (err) {
-        throw err;
-      } else {
-        data = "THANH_CONG";
-        callback(data);
-      }
-    });
+    try {
+      var decoded = jwtDecode(Token);
+      var IDuser = decoded.ID;
+      console.log(IDuser);
+    } catch (err) {
+      dataString = "KHONG_THANH_CONG";
+    }
+    if (dataString != "KHONG_THANH_CONG") {
+      file.mv("./public/uploads/" + file.name, function (err, result) {
+        if (err) throw err;
+      });
+      var sql = `insert into documents VALUES (null, ${IDuser}, '${
+        file.name
+      }', '${
+        year + "-" + month + "-" + date + " " + hour + ":" + min + ":" + sec
+      }', ${IDFolder})`;
+      db.query(sql, function (err, results, fields) {
+        if (err) {
+          throw err;
+        } else {
+          data = "THANH_CONG";
+          callback(data);
+        }
+      });
+    } else {
+      callback(data);
+    }
   }
 };

@@ -1,6 +1,6 @@
 module.exports = function (db, res, req, callback) {
   var nameFile = [];
-  var sql = `SELECT Name  FROM documents WHERE ID = ${req.body.ID}`;
+  var sql = `SELECT Name  FROM documents WHERE ID = ${req.params.ID}`;
   db.query(sql, function (err, results, fields) {
     if (err) {
       throw err;
